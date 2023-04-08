@@ -14,12 +14,12 @@ public class QuoteRepository {
     JdbcTemplate jdbcTemplate1;
 
     public List<Quote> getAll() {
-        return jdbcTemplate1.query("SELECT * FROM Quote",
+        return jdbcTemplate1.query("SELECT id, author, quote, posted FROM Quote",
             BeanPropertyRowMapper.newInstance(Quote.class));
     }
 
     public void addQuote(Quote quote) {
-        jdbcTemplate1.update("INSERT INTO Quote (author, quote, postedBy ) VALUES (?, ?, ?);",quote.getAuthor(), quote.getQuote(), quote.getPostedBy());
+        jdbcTemplate1.update("INSERT INTO Quote (author, quote, posted) VALUES (?, ?, ?);",quote.getAuthor(), quote.getQuote(), quote.getPosted());
     }
 
     public Quote getRandomQuote() {
@@ -27,7 +27,7 @@ public class QuoteRepository {
     }
 
     public List<Quote> getAllPostedByID(int id) {
-        return jdbcTemplate1.query("SELECT * FROM Quote where postedBy=?",BeanPropertyRowMapper.newInstance(Quote.class),id);
+        return jdbcTemplate1.query("SELECT * FROM Quote where posted=?",BeanPropertyRowMapper.newInstance(Quote.class),id);
     }
 
     public Quote getQuoteById( int id) {
@@ -35,8 +35,8 @@ public class QuoteRepository {
     }
 
     public int updateQuote( Quote quote) {
-        return jdbcTemplate1.update("UPDATE Quote SET author=?, quote=?, postedBy=? WHERE id=? ",
-                quote.getAuthor(), quote.getQuote(), quote.getPostedBy(), quote.getId());
+        return jdbcTemplate1.update("UPDATE Quote SET author=?, quote=?, posted=? WHERE id=? ",
+                quote.getAuthor(), quote.getQuote(), quote.getPosted(), quote.getId());
     }
 
     public void deleteQuote(int id) {
