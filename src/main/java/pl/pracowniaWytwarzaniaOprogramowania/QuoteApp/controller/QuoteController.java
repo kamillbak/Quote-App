@@ -1,10 +1,16 @@
 package pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.model.Quote;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.repository.QuoteRepository;
+import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.services.PdfGeneratorService;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -12,7 +18,13 @@ import java.util.List;
 public class QuoteController {
 
     @Autowired
+    PdfGeneratorService pdfGeneratorService;
+
+    @Autowired
     QuoteRepository  quoteRepository;
+
+    public QuoteController() {
+    }
 
     @GetMapping("/getAll")
     public List<Quote> getAllQuotes() {
@@ -25,12 +37,19 @@ public class QuoteController {
     }
 
     @GetMapping("/random")
-    public Quote getQuoteInPDF() {
+    public void getQuoteInPDF(HttpServletResponse response) throws IOException {
         Quote quote = quoteRepository.getRandomQuote();
 
-        return quote;
-        // create PDF here
-        // return PDF here
+        response.setContentType("application/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=quote_" + currentDateTime + ".pdf";
+        response.setHeader(headerKey, headerValue);
+
+        pdfGeneratorService.generatePDF(response, quote.getQuote(), quote.getAuthor());
+
     }
 
     @GetMapping("/getAll/{id}")
