@@ -7,10 +7,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 public class JWTFilter implements jakarta.servlet.Filter {
+
+    LoggedUser loggedUser = LoggedUser.getLoggedUser();
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -24,7 +27,7 @@ public class JWTFilter implements jakarta.servlet.Filter {
         else {
             try {
                 String token = header.substring(7);
-                Claims claims = Jwts.parser().setSigningKey("admin").parseClaimsJws(token).getBody();
+                Claims claims = Jwts.parser().setSigningKey(loggedUser.getPassword()).parseClaimsJws(token).getBody();
                 request.setAttribute("claims", claims);
             } catch (Exception e) {
                 throw new ServletException("Wrong key");

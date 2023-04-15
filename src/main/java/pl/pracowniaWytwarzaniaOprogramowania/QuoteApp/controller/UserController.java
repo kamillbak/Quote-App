@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.model.LoginRequest;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.model.User;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.repository.UserRepository;
+import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.security.LoggedUser;
 
 import java.util.Date;
 
@@ -14,8 +15,15 @@ import java.util.Date;
 @RequestMapping("/user")
 public class UserController {
 
+    LoggedUser loggedUser = LoggedUser.getLoggedUser(); // singleton object
+
     @Autowired
     UserRepository userRepository;
+
+    @GetMapping("/loggedIn")
+    public int getLoggedUser() {
+        return loggedUser.getId();
+    }
 
     @PostMapping("/register")
     public int register(@RequestBody User user) {
@@ -39,6 +47,10 @@ public class UserController {
             return "Password is not correct";
         }
         else {
+            // set user logged
+            loggedUser.setId(userFromDB.getId());
+            loggedUser.setUsername(userFromDB.getUsername());
+            loggedUser.setPassword(userFromDB.getPassword());
             //create token and return
             long currentTimeMillis =System.currentTimeMillis();
             return Jwts.builder()
