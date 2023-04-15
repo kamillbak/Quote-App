@@ -1,10 +1,14 @@
 package pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.controller;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.model.LoginRequest;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.model.User;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.repository.UserRepository;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/user")
@@ -26,14 +30,24 @@ public class UserController {
     }
 
     @PostMapping(value = "/login")
-    public int login(@RequestBody LoginRequest loginRequest) {
+    public String login(@RequestBody LoginRequest loginRequest) {
         User userFromDB = userRepository.getUserByUsername(loginRequest.getUsername());
         if (userFromDB == null || !loginRequest.getPassword().equals(userFromDB.getPassword()) ) {
-            return -1;
+            return "Username does not exist";
+        }
+        else if (!loginRequest.getPassword().equals(userFromDB.getPassword())) {
+            return "Password is not correct";
         }
         else {
-            // token i user ID
-            return userFromDB.getId();
+            //create token and return
+            long currentTimeMillis =System.currentTimeMillis();
+            return Jwts.builder()
+                    .setSubject(userFromDB.getUsername())
+                    .claim("role", "user")
+                    .setIssuedAt(new Date(currentTimeMillis))
+                    .setExpiration(new Date(currentTimeMillis + 20*1000)) // Valid for 1 minute
+                    .signWith(SignatureAlgorithm.HS512, userFromDB.getPassword())
+                    .compact();
         }
     }
 
