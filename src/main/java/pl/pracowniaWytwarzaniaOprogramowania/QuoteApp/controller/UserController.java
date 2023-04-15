@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping(value = "/login")
     public String login(@RequestBody LoginRequest loginRequest) {
         User userFromDB = userRepository.getUserByUsername(loginRequest.getUsername());
-        if (userFromDB == null || !loginRequest.getPassword().equals(userFromDB.getPassword()) ) {
+        if (userFromDB == null) {
             return "Username does not exist";
         }
         else if (!loginRequest.getPassword().equals(userFromDB.getPassword())) {
