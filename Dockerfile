@@ -8,6 +8,8 @@ RUN ./gradlew bootJar --no-daemon
 
 FROM openjdk:17-jdk-slim
 
+WORKDIR /Quote-App
+
 COPY build/libs/Quote_App-1.jar app.jar
 
 EXPOSE 8080
