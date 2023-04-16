@@ -8,8 +8,8 @@ RUN ./gradlew bootJar --no-daemon
 
 FROM openjdk:17-jdk-slim
 
-EXPOSE 8080
+COPY build/libs/Quote_App-1.jar app.jar
 
-COPY --from=build /build/libs/Quote_App-1.jar app.jar
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
