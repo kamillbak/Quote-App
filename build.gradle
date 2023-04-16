@@ -34,7 +34,7 @@ dependencies {
 
 jar {
 	manifest {
-		attributes "Main-Class": "pl.pracowniaWytwarzaniaOprogramowania.QuoteApp"
+		attributes "Main-Class": "QuoteApp.QuoteAppApplication"
 	}
 	from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 }
