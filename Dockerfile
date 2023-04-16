@@ -11,5 +11,6 @@ FROM eclipse-temurin:17-jdk-alpine
 VOLUME /tmp
 ARG JAR_FILE
 COPY build/libs/Quote_App-1.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENV DATABASE_URL=jdbc:h2:file:./bazaDanych1
 EXPOSE 8080
+ENTRYPOINT ["java","-jar","/app.jar"]
