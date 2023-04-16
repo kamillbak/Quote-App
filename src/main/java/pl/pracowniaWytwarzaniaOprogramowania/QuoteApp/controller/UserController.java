@@ -20,6 +20,11 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @GetMapping("/test")
+    public String test() {
+        return "hello test";
+    }
+
     @GetMapping("/loggedIn")
     public int getLoggedUser() {
         return loggedUser.getId();
