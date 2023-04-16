@@ -57,7 +57,7 @@ public class UserController {
                     .setSubject(userFromDB.getUsername())
                     .claim("role", "user")
                     .setIssuedAt(new Date(currentTimeMillis))
-                    .setExpiration(new Date(currentTimeMillis + 20*1000)) // Valid for 1 minute
+                    .setExpiration(new Date(currentTimeMillis + 30*60*1000)) // Valid for 1 minute
                     .signWith(SignatureAlgorithm.HS512, userFromDB.getPassword())
                     .compact();
         }
