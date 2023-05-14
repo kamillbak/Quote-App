@@ -14,7 +14,7 @@ import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.security.LoggedUser;
 import java.util.Date;
 
 
-
+@CrossOrigin(maxAge = 600)
 @RestController
 @RequestMapping("/user")
 public class UserController {
