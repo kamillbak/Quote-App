@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@CrossOrigin(maxAge = 600)
 @RestController
 @RequestMapping("/quote")
 public class QuoteController {
