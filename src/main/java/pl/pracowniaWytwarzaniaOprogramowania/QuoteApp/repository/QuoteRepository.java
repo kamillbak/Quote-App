@@ -53,16 +53,29 @@ public class QuoteRepository {
     }
 
     public Quote getQuoteById( int id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM Quote WHERE id=?", BeanPropertyRowMapper.newInstance(Quote.class), id);
+       // return jdbcTemplate.queryForObject("SELECT * FROM Quote WHERE id=?", BeanPropertyRowMapper.newInstance(Quote.class), id);
+
+        String sql = "SELECT * FROM Quote WHERE id='" +  String.valueOf(id) + "'";
+
+        List<Quote> quotes = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Quote.class));
+
+        if(quotes.size() == 1 ) {
+            return quotes.get(0);
+        }
+        else {
+            return null;
+        }
     }
 
     public int updateQuote( Quote quote) {
-        return jdbcTemplate.update("UPDATE Quote SET author=?, quote=?, posted=? WHERE id=? ",
+        int rowsAffected = jdbcTemplate.update("UPDATE Quote SET author=?, quote=?, posted=? WHERE id=? ",
                 quote.getAuthor(), quote.getQuote(), quote.getPosted(), quote.getId());
+        return rowsAffected;
     }
 
-    public void deleteQuote(int id) {
-        jdbcTemplate.update("DELETE FROM Quote WHERE id=?", id);
+    public int deleteQuote(int id) {
+        int rowsAffected = jdbcTemplate.update("DELETE FROM Quote WHERE id=?", id);
+        return rowsAffected;
     }
 
 

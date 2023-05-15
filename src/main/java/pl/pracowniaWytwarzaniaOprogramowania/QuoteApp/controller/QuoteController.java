@@ -76,26 +76,40 @@ public class QuoteController {
             return new ResponseEntity(null, HttpStatusCode.valueOf(404));
         }
         else {
-            return  new ResponseEntity(quoteRepository.getAll(), HttpStatusCode.valueOf(200)) ;
+            return  new ResponseEntity(quotes, HttpStatusCode.valueOf(200)) ;
         }
     }
 
     @PatchMapping("/update/{id}")
-    public int updateQuote(@PathVariable("id") int id, @RequestBody Quote quoteUpdate) {
+    public ResponseEntity<String> updateQuote(@PathVariable("id") int id, @RequestBody Quote quoteUpdate) {
         Quote quoteFromDb = quoteRepository.getQuoteById(id);
         if (quoteFromDb == null) {
-            return -1;
+            return new ResponseEntity("User with that id does not exist", HttpStatusCode.valueOf(404));
         }
         else {
             if(quoteUpdate.getQuote() != null) quoteFromDb.setQuote(quoteUpdate.getQuote());
             if(quoteUpdate.getAuthor() != null) quoteFromDb.setAuthor(quoteUpdate.getAuthor());
-            quoteRepository.updateQuote(quoteFromDb);
-            return 1;
+
+            int rowsAffected = quoteRepository.updateQuote(quoteFromDb);
+
+            if(rowsAffected >0){
+                return new ResponseEntity("Updated successfully", HttpStatusCode.valueOf(200));
+            }
+            else {
+                return new ResponseEntity("Failure! Updated rows: 0", HttpStatusCode.valueOf(400));
+            }
+
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteQuote(@PathVariable("id") int id) {
-        quoteRepository.deleteQuote(id);
+    public ResponseEntity<String> deleteQuote(@PathVariable("id") int id) {
+        int rowsAffected = quoteRepository.deleteQuote(id);
+        if(rowsAffected >0){
+            return new ResponseEntity("Deleted successfully", HttpStatusCode.valueOf(200));
+        }
+        else {
+            return new ResponseEntity("Failure! Deleted rows: 0", HttpStatusCode.valueOf(400));
+        }
     }
 }
