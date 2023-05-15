@@ -2,6 +2,8 @@ package pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.model.Quote;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.repository.QuoteRepository;
@@ -28,13 +30,26 @@ public class QuoteController {
     }
 
     @GetMapping("/getAll")
-    public List<Quote> getAllQuotes() {
-        return  quoteRepository.getAll();
+    public ResponseEntity<List<Quote>> getAllQuotes() {
+        List<Quote> quotes = quoteRepository.getAll();
+
+        if(quotes == null) {
+            return new ResponseEntity(null, HttpStatusCode.valueOf(404));
+        }
+        else {
+            return  new ResponseEntity(quoteRepository.getAll(), HttpStatusCode.valueOf(200)) ;
+        }
     }
 
     @PostMapping("/post")
-    public void postQuote(@RequestBody Quote quote) {
-        quoteRepository.addQuote(quote);
+    public ResponseEntity<String> postQuote(@RequestBody Quote quote) {
+        int rowsAffected = quoteRepository.addQuote(quote);
+        if(rowsAffected >0) {
+            return new ResponseEntity("Added rows:" + String.valueOf(rowsAffected), HttpStatusCode.valueOf(200));
+        }
+        else {
+            return new ResponseEntity("Failure! Added rows: 0", HttpStatusCode.valueOf(404));
+        }
     }
 
     @GetMapping("/random")
@@ -54,8 +69,15 @@ public class QuoteController {
     }
 
     @GetMapping("/getAll/{id}")
-    public List<Quote> getAllQuotePostedById(@PathVariable("id") int id) {
-        return quoteRepository.getAllPostedByID(id);
+    public ResponseEntity<List<Quote>> getAllQuotePostedById(@PathVariable("id") int id) {
+        List<Quote> quotes = quoteRepository.getAllPostedByID(id);
+
+        if(quotes == null) {
+            return new ResponseEntity(null, HttpStatusCode.valueOf(404));
+        }
+        else {
+            return  new ResponseEntity(quoteRepository.getAll(), HttpStatusCode.valueOf(200)) ;
+        }
     }
 
     @PatchMapping("/update/{id}")
