@@ -35,7 +35,18 @@ public class QuoteRepository {
     }
 
     public Quote getRandomQuote() {
-        return jdbcTemplate.queryForObject("SELECT * FROM Quote ORDER BY RAND() LIMIT 1", BeanPropertyRowMapper.newInstance(Quote.class));
+        //return jdbcTemplate.queryForObject("SELECT * FROM Quote ORDER BY RAND() LIMIT 1", BeanPropertyRowMapper.newInstance(Quote.class));
+
+        String sql = "SELECT * FROM Quote ORDER BY RAND() LIMIT 1";
+
+        List<Quote> quotes = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Quote.class));
+
+        if(quotes.size() == 1 ) {
+            return quotes.get(0);
+        }
+        else {
+            return null;
+        }
     }
 
     public List<Quote> getAllPostedByID(int id) {

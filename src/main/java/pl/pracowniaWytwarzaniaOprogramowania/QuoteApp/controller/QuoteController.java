@@ -55,19 +55,24 @@ public class QuoteController {
     }
 
     @GetMapping("/random")
-    public void getQuoteInPDF(HttpServletResponse response) throws IOException {
+    public  ResponseEntity<String> getQuoteInPDF(HttpServletResponse response) throws IOException {
         Quote quote = quoteRepository.getRandomQuote();
 
-        response.setContentType("application/pdf");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
-        String currentDateTime = dateFormatter.format(new Date());
+        if(quote == null) {
+            return new ResponseEntity("There is no quote in DB yet", HttpStatusCode.valueOf(200));
+        } else {
+            response.setContentType("application/pdf");
+            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+            String currentDateTime = dateFormatter.format(new Date());
 
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=quote_" + currentDateTime + ".pdf";
-        response.setHeader(headerKey, headerValue);
+            String headerKey = "Content-Disposition";
+            String headerValue = "attachment; filename=quote_" + currentDateTime + ".pdf";
+            response.setHeader(headerKey, headerValue);
 
-        pdfGeneratorService.generatePDF(response, quote.getQuote(), quote.getAuthor());
+            pdfGeneratorService.generatePDF(response, quote.getQuote(), quote.getAuthor());
 
+            return new ResponseEntity("PDF with quote sent", HttpStatusCode.valueOf(200));
+        }
     }
 
     @GetMapping("/getAll/{id}")
