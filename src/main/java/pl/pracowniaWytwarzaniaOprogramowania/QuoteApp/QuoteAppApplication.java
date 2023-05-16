@@ -37,7 +37,7 @@ public class QuoteAppApplication {
 					.allowedOrigins("*")
 					.allowedMethods("*")
 					.allowedHeaders("*")
-					.exposedHeaders("Authorization");
+					.exposedHeaders("*");
 		}
 	}
 
