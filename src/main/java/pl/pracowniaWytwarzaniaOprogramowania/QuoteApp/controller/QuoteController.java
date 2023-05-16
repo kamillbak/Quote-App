@@ -2,7 +2,9 @@ package pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.model.Quote;
@@ -60,18 +62,32 @@ public class QuoteController {
 
         if(quote == null) {
             return new ResponseEntity("There is no quote in DB yet", HttpStatusCode.valueOf(200));
+//        } else {
+//            response.setContentType("application/pdf");
+//            DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+//            String currentDateTime = dateFormatter.format(new Date());
+//
+//            String headerKey = "Content-Disposition";
+//            String headerValue = "attachment; filename=quote_" + currentDateTime + ".pdf";
+//            response.setHeader(headerKey, headerValue);
+//
+//            pdfGeneratorService.generatePDF(response, quote.getQuote(), quote.getAuthor());
+//
+//            return new ResponseEntity("PDF with quote sent", HttpStatusCode.valueOf(200));
+//        }
         } else {
-            response.setContentType("application/pdf");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
             DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
             String currentDateTime = dateFormatter.format(new Date());
-
-            String headerKey = "Content-Disposition";
             String headerValue = "attachment; filename=quote_" + currentDateTime + ".pdf";
-            response.setHeader(headerKey, headerValue);
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, headerValue);
 
             pdfGeneratorService.generatePDF(response, quote.getQuote(), quote.getAuthor());
 
-            return new ResponseEntity("PDF with quote sent", HttpStatusCode.valueOf(200));
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body("PDF with quote sent");
         }
     }
 
