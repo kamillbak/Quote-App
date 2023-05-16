@@ -12,6 +12,7 @@ import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.services.PdfGeneratorServi
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +35,8 @@ public class QuoteController {
         List<Quote> quotes = quoteRepository.getAll();
 
         if(quotes == null) {
-            return new ResponseEntity(null, HttpStatusCode.valueOf(404));
+            quotes = Collections.<Quote>emptyList();
+            return new ResponseEntity(quotes, HttpStatusCode.valueOf(200));
         }
         else {
             return  new ResponseEntity(quoteRepository.getAll(), HttpStatusCode.valueOf(200)) ;
@@ -73,7 +75,8 @@ public class QuoteController {
         List<Quote> quotes = quoteRepository.getAllPostedByID(id);
 
         if(quotes == null) {
-            return new ResponseEntity(null, HttpStatusCode.valueOf(404));
+            quotes = Collections.<Quote>emptyList();
+            return new ResponseEntity(quotes, HttpStatusCode.valueOf(200));
         }
         else {
             return  new ResponseEntity(quotes, HttpStatusCode.valueOf(200)) ;
