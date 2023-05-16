@@ -36,7 +36,7 @@ public class QuoteAppApplication {
 			registry.addMapping("/**")
 					.allowedOrigins("*")
 					.allowedMethods("*")
-					.allowedHeaders("Authorization")
+					.allowedHeaders("*")
 					.exposedHeaders("Authorization");
 		}
 	}

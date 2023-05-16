@@ -14,7 +14,6 @@ import pl.pracowniaWytwarzaniaOprogramowania.QuoteApp.security.LoggedUser;
 import java.util.Date;
 
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {
