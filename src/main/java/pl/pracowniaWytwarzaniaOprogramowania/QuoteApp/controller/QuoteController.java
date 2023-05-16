@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin(maxAge = 600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/quote")
 public class QuoteController {
