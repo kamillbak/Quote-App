@@ -19,7 +19,6 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/quote")
 public class QuoteController {
 
     @Autowired
@@ -31,7 +30,7 @@ public class QuoteController {
     public QuoteController() {
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/quote/getAll")
     public ResponseEntity<List<Quote>> getAllQuotes() {
         List<Quote> quotes = quoteRepository.getAll();
 
@@ -44,7 +43,7 @@ public class QuoteController {
         }
     }
 
-    @PostMapping("/post")
+    @PostMapping("/quote/post")
     public ResponseEntity<String> postQuote(@RequestBody Quote quote) {
         int rowsAffected = quoteRepository.addQuote(quote);
         if(rowsAffected >0) {
@@ -80,7 +79,7 @@ public class QuoteController {
         }
     }
 
-    @GetMapping("/getAll/{id}")
+    @GetMapping("/quote/getAll/{id}")
     public ResponseEntity<List<Quote>> getAllQuotePostedById(@PathVariable("id") int id) {
         List<Quote> quotes = quoteRepository.getAllPostedByID(id);
 
@@ -93,7 +92,7 @@ public class QuoteController {
         }
     }
 
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/quote/update/{id}")
     public ResponseEntity<String> updateQuote(@PathVariable("id") int id, @RequestBody Quote quoteUpdate) {
         Quote quoteFromDb = quoteRepository.getQuoteById(id);
         if (quoteFromDb == null) {
@@ -115,7 +114,7 @@ public class QuoteController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/quote/delete/{id}")
     public ResponseEntity<String> deleteQuote(@PathVariable("id") int id) {
         int rowsAffected = quoteRepository.deleteQuote(id);
         if(rowsAffected >0){
